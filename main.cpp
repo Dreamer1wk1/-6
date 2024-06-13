@@ -14,10 +14,10 @@ vector<vector<int>> match(teamNum, vector<int>(teamNum));
 vector<pair<pair<int, int>, int>> matchNode;
 
 struct Team {
-    int win;
-    int loss;
-    int left;
-    string name;
+    int win;//胜
+    int loss;//负
+    int left;//剩余比赛
+    string name;//队名
 } teamInfo[teamNum];
 
 void show() {
@@ -67,7 +67,7 @@ void addEdge(int u, int v, int cap) {
 int BFS(int source, int sink, vector<int> &parent) {
     fill(parent.begin(), parent.end(), -1);
     parent[source] = source;
-    queue<pair<int, int>> q;
+    queue<pair<int, int>> q;//当前接节点，残存流量
     q.push({source, INF});
     while (!q.empty()) {
         int cur = q.front().first;
@@ -145,10 +145,10 @@ void solve() {
     initiate();
     for (int i = 0; i < teamNum; i++) {
         buildNetwork(i);//根据队伍i的约束建立流网络
-        int source = 0;
-        int sink = matchNum + teamNum + 1;
+        int source = 0;//源点标号
+        int sink = matchNum + teamNum + 1;//汇点标号
         int totalGames = 0;
-        //统计源点出发的流量
+        //统计源点出发的流量，即比赛场次之和
         for (auto match: matchNode) {
             if (match.first.first != i && match.first.second != i) {
                 totalGames += match.second;
@@ -158,9 +158,9 @@ void solve() {
         int max_flow = maxFlow(source, sink);
         //源点出发的流量==到达汇点的流量，则不会被淘汰
         if (max_flow == totalGames) {
-            cout << teamInfo[i].name << " is not eliminated." << endl;
+            cout << teamInfo[i].name << " is not eliminated" << endl;
         } else {
-            cout << teamInfo[i].name << " is eliminated." << endl;
+            cout << teamInfo[i].name << " is eliminated" << endl;
         }
     }
 }
